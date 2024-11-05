@@ -14,6 +14,7 @@ dbt-extractor==0.5.1
 dbt-semantic-interfaces==0.5.1
 dbt-spark==1.8.0
 deepdiff==7.0.1
+future==1.0.0
 idna==3.10
 importlib-metadata==6.11.0
 isodate==0.6.1
@@ -33,8 +34,10 @@ packaging==24.1
 parsedatetime==2.6
 pathspec==0.12.1
 protobuf==4.25.5
+pure-sasl==0.6.2
 pydantic==2.9.2
 pydantic_core==2.23.4
+PyHive==0.7.0
 python-dateutil==2.9.0.post0
 python-slugify==8.0.4
 pytimeparse==1.1.8
@@ -47,6 +50,8 @@ six==1.16.0
 sqlparams==6.1.0
 sqlparse==0.5.1
 text-unidecode==1.3
+thrift==0.16.0
+thrift-sasl==0.4.3
 typing_extensions==4.12.2
 urllib3==2.2.3
 zipp==3.20.2
