@@ -85,16 +85,16 @@ services:
       - SPARK_SSL_ENABLED=no
       - SPARK_USER=spark
 
-  # trino:
-  #   container_name: trino
-  #   image: trinodb/trino:448
-  #   restart: unless-stopped
-  #   ports:
-  #     - "8082:8080"
-  #   depends_on:
-  #     - hive-metastore
-  #   volumes:
-  #     - ./trino/catalog:/etc/trino/catalog
+  trino:
+    container_name: trino
+    image: trinodb/trino:448
+    restart: unless-stopped
+    ports:
+      - "8082:8080"
+    depends_on:
+      - hive-metastore
+    volumes:
+      - ./trino/catalog:/etc/trino/catalog
 
   airbyte-init:
     image: airbyte/init:${VERSION}
