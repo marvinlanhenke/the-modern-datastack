@@ -28,6 +28,72 @@ services:
     volumes:
       - minio-data:/data
 
+  hive-mysql:
+    container_name: hive-mysql
+    image: mysql:5.7
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=metastore
+      - MYSQL_USER=hive
+      - MYSQL_PASSWORD=hive
+    volumes:
+      - metastore-data:/var/lib/mysql
+  hive-metastore:
+    container_name: hive-metastore
+    build: ./hive
+    restart: unless-stopped
+    ports:
+      - "9083:9083"
+    volumes:
+      - ./hive/conf/hive-site.xml:/opt/apache-hive-metastore-3.0.0-bin/conf/hive-site.xml
+
+  spark-master:
+    build: ./spark
+    container_name: spark-master
+    restart: unless-stopped
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_USER=spark
+    ports:
+      - '8084:8080'
+      - '7077:7077'
+    volumes:
+      - ./spark/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf
+
+  spark-worker:
+    build: ./spark
+    restart: unless-stopped
+    volumes:
+      - ./spark/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=2G
+      - SPARK_WORKER_CORES=1
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_USER=spark
+
+  trino:
+    container_name: trino
+    image: trinodb/trino:448
+    restart: unless-stopped
+    ports:
+      - "8082:8080"
+    depends_on:
+      - hive-metastore
+    volumes:
+      - ./trino/catalog:/etc/trino/catalog
+
   airbyte-init:
     image: airbyte/init:${VERSION}
     container_name: airbyte-init
@@ -357,6 +423,7 @@ services:
 volumes:
   db-data:
   minio-data:
+  metastore-data:
   airbyte-db-data:
     name: ${DB_DOCKER_MOUNT}
   airbyte-server-data:
