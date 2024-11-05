@@ -1,8 +1,7 @@
 services:
   db:
     container_name: postgres-db
-    build:
-      context: ./db
+    build: ./db
     restart: unless-stopped
     ports:
       - "5432:5432"
@@ -13,5 +12,23 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
 
+  minio:
+    container_name: minio
+    build: ./minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9090:9090"
+    command:
+      [
+        "bash",
+        "-c",
+        "mkdir -p /data/minio/raw && minio server /data/minio --console-address :9090"
+      ]
+    volumes:
+      - minio-data:/data
+
+
 volumes:
   db-data:
+  minio-data:
