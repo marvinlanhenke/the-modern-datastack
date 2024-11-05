@@ -358,8 +358,11 @@ volumes:
   db-data:
   minio-data:
   airbyte-db-data:
+    name: ${DB_DOCKER_MOUNT}
   airbyte-server-data:
+    name: ${DATA_DOCKER_MOUNT}
   airbyte-workspace-data:
+    name: ${WORKSPACE_DOCKER_MOUNT}
 configs:
   flags:
     file: ./flags.yml
