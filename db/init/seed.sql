@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS sales (
     , sale_date DATE NOT NULL
 );
 
--- Insert sample sales data into the sales table
 INSERT INTO sales (customer_id, product, amount, sale_date) VALUES
 (1, 'Product A', '$19.99', '2023-09-01'),
 (2, 'Product B', '$29.99', '2023-09-02'),
