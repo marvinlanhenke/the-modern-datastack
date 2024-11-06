@@ -18,5 +18,6 @@ SELECT
     , customer_id
     , product
     , {{ parse_currency('amount', '$') }} AS amount
+    , substring(amount, 1, 1) AS currency
     , sale_date
 FROM src_sales
