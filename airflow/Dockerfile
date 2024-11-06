@@ -6,3 +6,4 @@ RUN pip install --upgrade pip
 RUN pip install apache-airflow-providers-http
 RUN pip install apache-airflow-providers-airbyte==3.9.0
 RUN pip install apache-airflow-providers-airbyte[http]
+RUN pip install dbt-core dbt-spark dbt-spark[PyHive]
