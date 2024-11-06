@@ -13,7 +13,7 @@ x-airflow-common: &airflow-common
 services:
   db:
     container_name: postgres-db
-    build: ./db
+    build: ./postgres
     restart: unless-stopped
     ports:
       - "5433:5432"
