@@ -1,4 +1,5 @@
 from airflow.decorators import dag
+from airflow.operators.bash import BashOperator
 from airflow.operators.empty import EmptyOperator
 from airflow.providers.airbyte.operators.airbyte import AirbyteTriggerSyncOperator
 from pendulum import datetime
@@ -7,6 +8,7 @@ default_args = {"owner": "marvinlanhenke"}
 
 
 CONNECTION_ID = "276d2442-4cda-4353-abe1-2d6e048955dd"
+
 
 @dag(
     default_args=default_args,
@@ -24,9 +26,23 @@ def dwh_airbyte_dbt_example() -> None:
         connection_id=CONNECTION_ID,
     )
 
+    transform = BashOperator(
+        task_id="dbt_transform",
+        bash_command="/home/airflow/.local/bin/dbt run --profiles-dir $PROFILES_DIR --target airflow",
+        env={"PROFILES_DIR": "/opt/airflow/dbt_profile"},
+        cwd="/opt/airflow/dbt",
+    )
+
+    test = BashOperator(
+        task_id="dbt_test",
+        bash_command="/home/airflow/.local/bin/dbt test --profiles-dir $PROFILES_DIR --target airflow",
+        env={"PROFILES_DIR": "/opt/airflow/dbt_profile"},
+        cwd="/opt/airflow/dbt",
+    )
+
     end = EmptyOperator(task_id="end")
 
-    start >> extract >> end  # type: ignore
+    start >> extract >> transform >> test >> end  # type: ignore
 
 
 dwh_airbyte_dbt_example()
