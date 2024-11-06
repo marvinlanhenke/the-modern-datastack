@@ -23,7 +23,7 @@ services:
       [
         "bash",
         "-c",
-        "mkdir -p /data/minio/raw && minio server /data/minio --console-address :9090"
+        "mkdir -p /data/minio/raw  /data/minio/transformed /data/minio/curated && minio server /data/minio --console-address :9090"
       ]
     volumes:
       - minio-data:/data
